@@ -1,0 +1,106 @@
+# IntelliJ
+.idea/
+
+# API Docs
+src/doc/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Packaging files:
+*.egg*
+*.lock
+*.tmp
+# Sphinx docs:
+build
+
+# SQLite3 database files:
+*.db
+*.sqlite3
+*.sqlite
+
+# Logs:
+*.log
+
+# Environment variables
+local.env
+config.env
+
+# Django stuff:
+*.mo
+*.pot
+
+
+# Linux Editors
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
+*.swp
+*.swo
+
+# Rope
+.ropeproject
+
+# Mac
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# virtualenv
+olivia-job-search-env/
+bin
+lib
+!/src/templates/emails/builder/lib
+local
+include
+
+# Project settings
+./site/
+/src/media/*
+/env/
+/nbproject/
+.buildpath
+.project
+/.settings/
+/.idea
+/lc/nbproject/private
+test_ads.py
+/src/videos/*
+/src/mms/*
+*node_modules*
+/src/templates/emails/builder/tmpl/rendered
+*sent_emails*
+/src/cache/*
+*.sh
+/src/test.py
+/src/script.py
+*.sh
+/src/script/*
+config.env
+pyvenv.cfg
+*.sh
+/src/docs
+/src/coverage
+/src/tdd
+.coverage
+*coverage.*
+*junit*
+!/src/ai_nlp/stanford/deploy.sh
+job-search-env/.Python
+
+/.vscode
+/.mypy_cache
