@@ -14,9 +14,9 @@ class UnitSerializer(serializers.ModelSerializer):
             {'created_date': datetime.now(),
              'updated_date': datetime.now()}
         )
-        customer = Unit(**validated_data)
-        customer.save()
-        return customer
+        unit = Unit(**validated_data)
+        unit.save()
+        return unit
 
     def update(self, instance, validated_data):
         validated_data['updated_date'] = datetime.now()
