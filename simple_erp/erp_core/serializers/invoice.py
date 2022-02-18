@@ -62,7 +62,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
                     [invoice_item['quantity'] * invoice_item['product'].price for invoice_item in invoice_items])
             }
         )
-        invoice = Invoice.objects.update_or_create(**validated_data)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
 
         for invoice_item in invoice_items:
             invoice_item.update(
@@ -70,6 +72,5 @@ class InvoiceSerializer(serializers.ModelSerializer):
                  'created_date': datetime.now(),
                  'updated_date': datetime.now()}
             )
-            InvoiceItem.objects.update_or_create(invoice=invoice, **invoice_item)
 
-        return invoice
+        return instance

@@ -12,8 +12,8 @@ class InventorySerializer(serializers.ModelSerializer):
         fields = ['id', 'product', 'product_name', 'quantity']
 
     def validate(self, attrs):
-        product_id = attrs.get('product', '').strip()
-        quantity = attrs.get('quantity', '').strip()
+        product_id = attrs.get('product', '')
+        quantity = attrs.get('quantity', '')
 
         validated_data = {}
 
@@ -22,9 +22,6 @@ class InventorySerializer(serializers.ModelSerializer):
 
         if not quantity:
             raise serializers.ValidationError('Quantity must not be empty!')
-
-        if not quantity.isdigit():
-            raise serializers.ValidationError('Price must be of digits!')
 
         validated_data.update(attrs)
 
