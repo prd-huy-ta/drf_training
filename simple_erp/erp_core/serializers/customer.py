@@ -30,9 +30,6 @@ class CustomerSerializer(serializers.ModelSerializer):
         if not phone:
             raise serializers.ValidationError('Phone must not be empty!')
 
-        if str is type(date_of_birth) and not re.match('%d-%m-%Y', date_of_birth):
-            raise serializers.ValidationError('Date of Birth must be of 20-01-2022 format!')
-
         if not phone.isdigit():
             raise serializers.ValidationError('Phone must be of digits!')
 

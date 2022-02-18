@@ -54,6 +54,7 @@ tramp
 
 # Mac
 .DS_Store
+test_ads.py
 ._*
 
 # Windows
@@ -104,3 +105,5 @@ job-search-env/.Python
 
 /.vscode
 /.mypy_cache
+
+*.pyc
