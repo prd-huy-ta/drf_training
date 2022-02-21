@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import InvoiceItem, Product
+from ..models import InvoiceItem
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):

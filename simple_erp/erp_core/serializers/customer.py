@@ -1,14 +1,22 @@
-from rest_framework import serializers
 from ..models import Customer
+from ..utils import validator
 
+from rest_framework import serializers
 from datetime import datetime
 import re
+from rest_framework.validators import UniqueTogetherValidator
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(validators=[validator.must_be_alphabetic])
+
     class Meta:
         model = Customer
         fields = ['id', 'first_name', 'last_name', 'date_of_birth', 'phone']
+        validators = [validator.HasLength(base=10, field='phone'),
+                      UniqueTogetherValidator(queryset=Customer.objects.all(),
+                                              fields=['first_name', 'last_name']),
+                      ]
 
     def validate(self, attrs):
         first_name = attrs.get('first_name', '').strip()
@@ -32,9 +40,6 @@ class CustomerSerializer(serializers.ModelSerializer):
 
         if not phone.isdigit():
             raise serializers.ValidationError('Phone must be of digits!')
-
-        if 10 != len(phone):
-            raise serializers.ValidationError('Phone must be be a 10-digits number!')
 
         validated_data.update(attrs)
         if str is type(date_of_birth):

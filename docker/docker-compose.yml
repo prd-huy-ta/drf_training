@@ -4,6 +4,7 @@ services:
   simple_erp_db:
     image: mysql:5.7
     restart: always
+    container_name: db
     environment:
       MYSQL_DATABASE: 'db'
       MYSQL_USER: 'user'
@@ -16,6 +17,26 @@ services:
     volumes:
       - my-db:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-net
+
+  web:
+    build:
+      context: ../
+      dockerfile: ./docker/build/Dockerfile
+    container_name: drf_app
+    volumes:
+      - ../simple-erp/:/simple-erp
+    ports:
+      - "8000:8000"
+    depends_on:
+      - simple_erp_db
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
 
 volumes:
   my-db:

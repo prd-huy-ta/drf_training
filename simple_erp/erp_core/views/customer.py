@@ -3,35 +3,89 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from ..serializers import CustomerSerializer
 from ..models import Customer
+from rest_framework import status
 
 
-class CustomerViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+class CustomerViewSet(viewsets.ViewSet):
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
 
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+    def update(self, request, pk=None):
+        try:
+            instance = Customer.objects.filter(pk=pk).first()
 
-    def list(self, request, *args, **kwargs):
+            response = {
+                'message': ''
+            }
+            if not instance:
+                response.update({
+                    'message': 'The thing is not found'
+                })
+                return Response(response, status=status.HTTP_204_NO_CONTENT)
+            serializer = CustomerSerializer(instance, data=request.data)
 
-        queryset = Customer.objects.all()
-        filters = self.build_filter(kwargs)
+            if not serializer.is_valid():
+                response.update({
+                    'message': 'The data is not valid'
+                })
+                return Response(response, status=status.HTTP_204_NO_CONTENT)
 
-        customer = self.filter_queryset(queryset.filter(filters).order_by('id'))
+            serializer.save()
+            response.update({
+                'message': 'Data has been successfully updated!',
+                'data': serializer.validated_data
+            })
 
-        page = self.paginate_queryset(customer)
+            return Response(response, status=status.HTTP_200_OK)
 
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        except Exception as exception:
+            raise exception
 
-        serializer = self.get_serializer(page, many=True)
-        result_set = serializer.data
+    @action(detail=False, methods=["GET"], url_path="listall")
+    def list_all(self, request):
+        try:
+            filter_params = self.build_filter(request.query_params)
+            queryset = Customer.objects.all().filter(filter_params).order_by('id')
+            serializer = CustomerSerializer(queryset, many=True)
 
-        return Response(result_set)
+            response = {
+                'count': len(serializer.data),
+                'custom_field': 'custom',
+                'data': serializer.data,
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as exception:
+            raise exception
+
+    @action(detail=False, methods=["POST"], url_path='create_one')
+    def create_one(self, request):
+        try:
+            serializer = CustomerSerializer(data=request.data)
+            response = {
+                'message': 'Created Failed',
+                'data': []
+            }
+
+            if not serializer.is_valid():
+                print(serializer.errors)
+                response.update({
+                    'reason': serializer.errors
+                })
+                return Response(response, status=status.HTTP_204_NO_CONTENT)
+            response.update({
+                'message': 'Successfully created data!',
+                'data': serializer.validated_data
+            })
+
+            serializer.save()
+
+            return Response(response, status=status.HTTP_204_NO_CONTENT)
+        except Exception as exception:
+            raise exception
 
     @staticmethod
     def build_filter(query_params):
